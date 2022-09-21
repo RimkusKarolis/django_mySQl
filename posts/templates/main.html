@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post Blog</title>
+    <link rel="stylesheet" href="{% static 'main.css' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      <link rel="stylesheet" href="style.css">
+      
+    />
+  </head>
+  <body class="bg-dark">
+
+
+    <div class="col-md-4 offset-md-4">
+      {{error}}
+
+      <!-- Create Form -->
+      <form
+        action="{% url 'create_post' %}"
+        method="POST"
+        class="card card-body mb-2"
+      >
+        {% csrf_token %}
+
+        <label for="fullName">Full Name:</label>
+        <input
+          required
+          type="text"
+          name="fullName"
+          class="form-control mb-2"
+          autofocus
+        />
+
+        <label for="date">Date:</label>
+        <input  
+          required
+          name="date"
+          type="date"
+          id="date"
+          rows="2"
+          class="form-control mb-2"
+        ></input>
+
+        <label for="fullUrl">Picture Url:</label>
+        <input
+          required
+          type="url"
+          name="fullUrl"
+          class="form-control mb-2"
+          autofocus
+        />
+
+        <label for="comment">Comment:</label>
+        <textarea
+          required
+          name="comment"
+          id="comment"
+          rows="2"
+          class="form-control mb-2"
+        ></textarea>
+        <button class="btn btn-primary">Submit</button>
+      </form>
+
+      <!-- List Posts -->
+      {% for post in posts %}
+      <div class="list-group">
+        <div
+          class="card card-body bg-secondary text-light d-flex flex-row align-content-between mb-2"
+        >
+          <div class="">
+            <h3 class="h4">{{post.fullName}}</h3>
+            <p>{{post.date}}</p>
+            <img id="output" name="img" src="{{post.fullUrl}}" width="200", lenght="150" />
+            <p>{{ post.comment }}</p>
+          </div>
+          <div class="float-right">
+          <form action="{% url 'delete_post' post.id %}" method="POST">
+            {% csrf_token %}
+              <button class="btn btn-danger ">Delete</button>
+          </form>
+          <form action="{% url 'edit_post' post.id %}" method="POST">
+            {% csrf_token %}
+            <button class="btn btn-primary">Edit</button>
+          </form>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <h1 class="text-light">No posts yet</h1>
+      {% endfor %}
+    </div>
+  </body>
+</html>
